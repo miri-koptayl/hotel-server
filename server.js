@@ -22,8 +22,8 @@ app.use("/api/invitation", invitationRouter)
 
 
 
-
-app.listen(8080,() => {
-    console.log("app is listening on port 8080")
+let port=process.env.PORT
+app.listen(port,() => {
+    console.log(`app is listening on port ${port}`)
 })
 
