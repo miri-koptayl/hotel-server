@@ -1,4 +1,5 @@
 import { userModel } from "../models/user.js";
+import {gwt} from "../Utils/generateToken.js"
 
 export const getAllUsers = async (req, res) => {
     try {
@@ -12,20 +13,24 @@ export const getAllUsers = async (req, res) => {
 
 export const addUserSignUp = async (req, res) => {
     if (!req.body.phone || !req.body.email || !req.body.username || !req.body.password)
-        return res.status(404).json({ title: "missing data", message: "missing data" })
+        return res.status(404).json({ title: "missing data", message: "missing data" });
 
     try {
+        let newUser = new userModel(req.body);
+        let token = generateToken(newUser);
 
-        let newUser = new userModel(req.body)
+        // שמירת הטוקן בשדה token במסד הנתונים
+        newUser.token = token;
+        console.log(newUser.token);
         let data = await newUser.save();
+        res.json(data);  // מחזיר את הנתונים כולל הטוקן
 
-
-        res.json(data);
     } catch (err) {
         console.log("err");
-        res.status(400).json({ title: "error cannot add ", message: err.message })
+        res.status(400).json({ title: "error cannot add", message: err.message });
     }
-}
+};
+
 
 export const update = async (req, res) => {
     let { id } = req.params;
@@ -89,6 +94,7 @@ export const getUserByUserNamePasswordLogin = async (req, res) => {
         let data = await userModel.findOne({ username: username, password: password });
         if (!data)
             return res.status(404).json({ title: "cannot login", message: "no user with such details" })
+        data.token = generateToken(data);
         res.json(data)
     } catch (err) {
         console.log("err");

@@ -18,8 +18,7 @@ app.use(logToFile)
 
 app.use("/api/rooms", roomRouter)
 app.use("/api/user", userRouter)
-app.use("/api/invitation", invitationRouter)
-
+app.use("/api/invitation", invitationRouter);
 
 
 let port=process.env.PORT

@@ -29,9 +29,7 @@ export const getinvitationsByUserId = async (req, res) => {
 }
 export const completeInvitation = async (req, res) => {
     try {
-        const { invitationId } = req.params; // קבלת מזהה ההזמנה מתוך הכתובת
-
-        // בדיקת פרמטרים נדרשים
+        const { invitationId } = req.params;
         if (!invitationId) {
             return res.status(400).json({
                 title: "Missing required details",
@@ -39,11 +37,10 @@ export const completeInvitation = async (req, res) => {
             });
         }
 
-        // עדכון שדה isFinish ל-true
         const updatedInvitation = await invitationModel.findByIdAndUpdate(
             invitationId,
-            { isFinish: true }, // ערכים לעדכון
-            { new: true } // מחזיר את ההזמנה לאחר העדכון
+            { isFinish: true },
+            { new: true }
         );
 
         if (!updatedInvitation) {
@@ -53,7 +50,6 @@ export const completeInvitation = async (req, res) => {
             });
         }
 
-        // החזרת התוצאה המעודכנת
         return res.json({
             title: "Invitation updated",
             updatedInvitation,
@@ -68,17 +64,15 @@ export const completeInvitation = async (req, res) => {
 
 export const addInvitation = async (req, res) => {
     try {
-        let { userId, rooms } = req.body;
+        let { userId, orderRooms, EmailAddress, pay } = req.body;
 
-        // בדיקת פרמטרים נדרשים
-        if (!userId || !rooms || !rooms.length) {
-            return res.status(404).json({
+        if (!userId || !orderRooms || orderRooms.length==0 || !pay) {
+            return res.status(400).json({
                 title: "Missing required details",
-                message: "userId and rooms are required",
+                message: "userId, orderRooms, and payment details are required",
             });
         }
 
-        // בדיקת קיום המשתמש
         const user = await userModel.findById(userId);
         if (!user) {
             return res.status(404).json({
@@ -87,38 +81,28 @@ export const addInvitation = async (req, res) => {
             });
         }
 
-        // בדיקת סטטוס החדרים
         let availableRooms = [];
-        for (let item of rooms) {
-            const room = await roomModel.findById(item.id);
-
+        for (let item of orderRooms) {
+            const room = await roomModel.findById(item._id);
             if (!room) {
                 return res.status(404).json({
                     title: "Room not found",
-                    message: `Room with ID ${item.id} does not exist`,
+                    message: `Room with ID ${item._id} does not exist`,
                 });
             }
-
-            if (room.isOccupied) {
-                return res.status(400).json({
-                    title: "Room unavailable",
-                    message: `Room with ID ${room.id} is already occupied`,
-                });
-            }
-
             availableRooms.push(room);
         }
 
-        // עדכון סטטוס החדרים ל"תפוסים"
         for (let room of availableRooms) {
             room.isOccupied = true;
             await room.save();
         }
 
-        // יצירת הזמנה חדשה
         const invitation = new invitationModel({
             userId,
-            rooms: availableRooms.map((room) => room._id),
+            orderRooms: availableRooms.map((room) => room._id),
+            EmailAddress,
+            pay,
         });
         await invitation.save();
 
@@ -130,11 +114,10 @@ export const addInvitation = async (req, res) => {
         });
     }
 };
+
 export const delInvitation = async (req, res) => {
     try {
-        const { invitationId } = req.body; // מקבלים את מזהה ההזמנה למחיקה
-
-        // בדיקת פרמטרים נדרשים
+        const { invitationId } = req.body;
         if (!invitationId) {
             return res.status(400).json({
                 title: "Missing required details",
@@ -142,10 +125,7 @@ export const delInvitation = async (req, res) => {
             });
         }
 
-        // מציאת ההזמנה ומחיקתה
         const deletedInvitation = await invitationModel.findByIdAndDelete(invitationId);
-
-        // בדיקה אם ההזמנה קיימת
         if (!deletedInvitation) {
             return res.status(404).json({
                 title: "Invitation not found",
@@ -153,7 +133,6 @@ export const delInvitation = async (req, res) => {
             });
         }
 
-        // שחרור החדרים הקשורים להזמנה
         for (let room of deletedInvitation.orderRooms) {
             const roomToUpdate = await roomModel.findById(room._id);
             if (roomToUpdate) {
