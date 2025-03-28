@@ -1,8 +1,10 @@
 import { roomModel } from "../models/room.js"
 
 //פונקציה להחזרת  כמות החדרים לפי הדפים
+// עדכון מספר החדרים לעמוד
 export async function getTotalRoomPages(req, res) {
-    let limit = parseInt(req.query.limit) || 4;
+    let limit = parseInt(req.query.limit) || 6; // היה 4, עכשיו 6
+
     console.log(`📢 בקשת מספר עמודים התקבלה עם limit=${limit}`); // בדיקה
 
     try {
@@ -24,17 +26,19 @@ export async function getTotalRoomPages(req, res) {
 //פונקציה להחזרת כל החדרים
 // פונקציה להחזרת כל החדרים לפי דף מסוים
 export const getAllRooms = async (req, res) => {
-    let limit = parseInt(req.query.limit) || 4; 
-    let page = parseInt(req.query.page) || 1;  
+    let limit = parseInt(req.query.limit) || 6;
+    let page = parseInt(req.query.page) || 1;
 
     try {
         let data = await roomModel.find().skip((page - 1) * limit).limit(limit);
+        console.log('Data from database:', data);  // הדפסת הנתונים שמתקבלים
         res.json(data);
     } catch (err) {
         console.log("err");
         res.status(400).json({ title: "error cannot get all", message: "somethings wrong" });
     }
 };
+
 
 
 //פונקציה להחזרת חדר לפ מזהה
