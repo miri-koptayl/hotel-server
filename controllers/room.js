@@ -28,11 +28,11 @@ export async function getTotalRoomPages(req, res) {
 export const getAllRooms = async (req, res) => {
     let limit = parseInt(req.query.limit) || 6;
     let page = parseInt(req.query.page) || 1;
-
     try {
         let data = await roomModel.find().skip((page - 1) * limit).limit(limit);
-        console.log('Data from database:', data);  // הדפסת הנתונים שמתקבלים
         res.json(data);
+        console.log('Data from database:', data);  // הדפסת הנתונים שמתקבלים
+
     } catch (err) {
         console.log("err");
         res.status(400).json({ title: "error cannot get all", message: "somethings wrong" });
@@ -51,6 +51,7 @@ export const getByID = async (req, res) => {
         if (!data)
             return res.status(404).json({ title: "error cannot get by id", message: "not valid  id parameter found" })
         res.json(data);
+        console.log("getByID")
     } catch (err) {
         console.log("err");
         res.status(400).json({ title: "error cannot get by id", message: "somethongs wrong" })
@@ -67,6 +68,8 @@ export const deleteById = async (req, res) => {
         if (!data)
             return res.status(404).json({ title: "error cannot get by id", message: "not valid  id parameter found" })
         res.json(data);
+        console.log("deleteById")
+
     } catch (err) {
         console.log("err");
         res.status(400).json({ title: "error cannot get by id", message: "somethongs wrong" })
@@ -88,6 +91,8 @@ export const updateByID = async (req, res) => {
         if (!data)
             return res.status(404).json({ title: "error cannot update by id", message: "not valid  id parameter found" })
         res.json(data);
+        console.log("updateByID")
+
     } catch (err) {
         console.log("err");
         res.status(400).json({ title: "error cannot update by id", message: "somethongs wrong" })

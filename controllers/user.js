@@ -17,7 +17,7 @@ export const addUserSignUp = async (req, res) => {
 
     try {
         let newUser = new userModel(req.body);
-        let token = generateToken(newUser);
+        let token = gwt(newUser);
 
         // שמירת הטוקן בשדה token במסד הנתונים
         newUser.token = token;
@@ -94,7 +94,7 @@ export const getUserByUserNamePasswordLogin = async (req, res) => {
         let data = await userModel.findOne({ username: username, password: password });
         if (!data)
             return res.status(404).json({ title: "cannot login", message: "no user with such details" })
-        data.token = generateToken(data);
+        data.token = gwt(data);
         res.json(data)
     } catch (err) {
         console.log("err");
