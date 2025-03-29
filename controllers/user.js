@@ -1,5 +1,5 @@
 import { userModel } from "../models/user.js";
-import {gwt} from "../Utils/generateToken.js"
+import {jwt} from "../Utils/generateToken.js"
 
 export const getAllUsers = async (req, res) => {
     try {
@@ -17,13 +17,12 @@ export const addUserSignUp = async (req, res) => {
 
     try {
         let newUser = new userModel(req.body);
-        let token = gwt(newUser);
+        let token = jwt(newUser);
 
-        // שמירת הטוקן בשדה token במסד הנתונים
         newUser.token = token;
         console.log(newUser.token);
         let data = await newUser.save();
-        res.json(data);  // מחזיר את הנתונים כולל הטוקן
+        res.json(data);  // 
 
     } catch (err) {
         console.log("err");
@@ -94,7 +93,7 @@ export const getUserByUserNamePasswordLogin = async (req, res) => {
         let data = await userModel.findOne({ username: username, password: password });
         if (!data)
             return res.status(404).json({ title: "cannot login", message: "no user with such details" })
-        data.token = gwt(data);
+        data.token = jwt(data);
         res.json(data)
     } catch (err) {
         console.log("err");
