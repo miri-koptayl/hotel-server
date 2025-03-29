@@ -96,6 +96,8 @@ export const getUserByUserNamePasswordLogin = async (req, res) => {
         if (!data)
             return res.status(404).json({ title: "cannot login", message: "no user with such details" })
         data.token = jwtt(data);
+        console.log(password)
+
         res.json(data)
     } catch (err) {
         console.log("err");

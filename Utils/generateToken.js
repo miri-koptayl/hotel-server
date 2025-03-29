@@ -10,7 +10,7 @@ export function jwtt(user) {
     
         process.env.SECRET_KEY, // תיקון שם המשתנה
         {
-            expiresIn: 60 * 3
+            expiresIn: 60 * 60
         }
     )
     return t;
