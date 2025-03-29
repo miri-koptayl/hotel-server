@@ -1,5 +1,5 @@
 import { userModel } from "../models/user.js";
-import {jwt} from "../Utils/generateToken.js"
+import {jwtt} from "../Utils/generateToken.js"
 
 export const getAllUsers = async (req, res) => {
     try {
@@ -17,7 +17,7 @@ export const addUserSignUp = async (req, res) => {
 
     try {
         let newUser = new userModel(req.body);
-        let token = jwt(newUser);
+        let token = jwtt(newUser);
 
         newUser.token = token;
         console.log(newUser.token);
@@ -75,8 +75,10 @@ export const getUserById = async (req, res) => {
     let { id } = req.params;
     try {
 
-        let data = await userModel.findById(id).select('-password');;
+        let data = await userModel.findById(id).select('-password');
+
         if (!data)
+
             return res.status(404).json({ title: "error cannot get by id", message: "not valid  id parameter found" })
         res.json(data);
     } catch (err) {
@@ -93,7 +95,7 @@ export const getUserByUserNamePasswordLogin = async (req, res) => {
         let data = await userModel.findOne({ username: username, password: password });
         if (!data)
             return res.status(404).json({ title: "cannot login", message: "no user with such details" })
-        data.token = jwt(data);
+        data.token = jwtt(data);
         res.json(data)
     } catch (err) {
         console.log("err");
