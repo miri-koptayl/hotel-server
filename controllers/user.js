@@ -29,7 +29,8 @@ export const addUserSignUp = async (req, res) => {
         let hashedPassword = await bcrypt.hash(password, 10);
         let newUser = new userModel({ ...req.body, password: hashedPassword });
         let data = await newUser.save();
-        
+        console.log(data)
+        console.log(process.env.SECRET_KEY)
         data.token = jwtt(data);
         await data.save();
         res.json(data);
