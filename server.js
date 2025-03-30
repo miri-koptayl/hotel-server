@@ -21,7 +21,7 @@ app.use("/api/user", userRouter)
 app.use("/api/invitation", invitationRouter);
 
 
-let port=process.env.PORT
+let port=c
 app.listen(port,() => {
     console.log(`app is listening on port ${port}`)
 })
