@@ -8,21 +8,22 @@ import userRouter from "./routers/user.js";
 import invitationRouter from "./routers/invitation.js";
 import logToFile from "./middlewares/logTOFilrMiddleware.js";
 import { jwtt } from "./Utils/generateToken.js";
+
 dotenv.config();
 connectToDB();
+
 const app = express();
 
-app.use(cors())
-app.use(express.json())
-app.use(logToFile)
+app.use(cors());
+app.use(express.json());
+app.use(logToFile);
 
-app.use("/api/rooms", roomRouter)
-app.use("/api/user", userRouter)
+app.use("/api/rooms", roomRouter);
+app.use("/api/user", userRouter);
 app.use("/api/invitation", invitationRouter);
 
+const PORT = process.env.PORT || 8080; // לוודא שהפורט מוגדר נכון
 
-let port=process.env.port;
-app.listen(port,() => {
-    console.log(`app is listening on port ${port}`)
-})
-
+app.listen(PORT, () => {
+    console.log(`App is listening on port ${PORT}`);
+});
