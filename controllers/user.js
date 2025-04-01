@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 
 dotenv.config(); // טעינת משתני סביבה
+console.log(process.env.SECRET_KEY)
 
 export const getAllUsers = async (req, res) => {
     try {
@@ -62,6 +63,39 @@ export const getUserByUserNamePasswordLogin = async (req, res) => {
         res.status(400).json({ title: "error cannot login", message: err.message });
     }
 };
+export const update = async (req, res) => {
+    let { id } = req.params;
+
+    if (req.body.password && req.body.password.length < 2)
+        return res.status(404).json({ title: "wrong paswword", message: "wrong data" })
+    try {
+
+        let data = await userModel.findByIdAndUpdate(id, req.body, { new: true });
+        if (!data)
+            return res.status(404).json({ title: "error cannot update by id", message: "not valid  id parameter found" })
+        res.json(data);
+    } catch (err) {
+        console.log("err");
+        res.status(400).json({ title: "error cannot update by id", message: err.message })
+    }
+
+}
+export const getUserById = async (req, res) => {
+
+    let { id } = req.params;
+    try {
+
+        let data = await userModel.findById(id).select('-password');
+
+        if (!data)
+
+            return res.status(404).json({ title: "error cannot get by id", message: "not valid  id parameter found" })
+        res.json(data);
+    } catch (err) {
+        console.log("err");
+        res.status(400).json({ title: "error cannot get by id", message: err.message })
+    }
+}
 
 export const updateUserPassword = async (req, res) => {
     const { email, newPassword } = req.body;

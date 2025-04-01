@@ -7,7 +7,7 @@ import roomRouter from "./routers/room.js";
 import userRouter from "./routers/user.js";
 import invitationRouter from "./routers/invitation.js";
 import logToFile from "./middlewares/logTOFilrMiddleware.js";
-
+import { jwtt } from "./Utils/generateToken.js";
 dotenv.config();
 connectToDB();
 const app = express();
@@ -21,7 +21,7 @@ app.use("/api/user", userRouter)
 app.use("/api/invitation", invitationRouter);
 
 
-let port=c
+let port=process.env.port;
 app.listen(port,() => {
     console.log(`app is listening on port ${port}`)
 })
