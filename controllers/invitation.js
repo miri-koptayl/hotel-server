@@ -100,10 +100,16 @@ export const addInvitation = async (req, res) => {
 
         const invitation = new invitationModel({
             userId,
-            orderRooms: availableRooms.map((room) => room._id),
+            orderRooms: orderRooms.map((item, i) => ({
+                _id: availableRooms[i]._id,
+                name: availableRooms[i].name,
+                price: availableRooms[i].price,
+                quantity: item.quantity || 1
+            })),
             EmailAddress,
             pay,
         });
+        
         await invitation.save();
 
         return res.json(invitation);
