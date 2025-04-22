@@ -1,13 +1,12 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-
 import { connectToDB } from "./config/DB.js";
 import roomRouter from "./routers/room.js";
 import userRouter from "./routers/user.js";
 import invitationRouter from "./routers/invitation.js";
 import logToFile from "./middlewares/logTOFilrMiddleware.js";
-import { generateToken } from "./Utils/generateToken.js";
+import { jwtt } from "./Utils/generateToken.js";
 
 dotenv.config();
 connectToDB();

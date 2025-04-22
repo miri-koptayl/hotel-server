@@ -1,15 +1,21 @@
-import jwt from "jsonwebtoken";
+import jwt from 'jsonwebtoken';
 
-export function generateToken(user) {
-    let token = jwt.sign({
+export function jwtt(user) {
+    console.log("SECRET_KEY:", process.env.SECRET_KEY);
+
+    let t = jwt.sign({
         userId: user._id,
         role: user.role,
-        username: user.username
+        userName: user.username
+        
     },
         process.env.SECRET_KEY,
         {
-            expiresIn: 60 * 60 * 24
+            expiresIn: 60 * 60
         }
     )
-    return token;
+    return t;
 }
+
+
+
