@@ -27,8 +27,7 @@ export const addUserSignUp = async (req, res) => {
             
             let newUser = new userModel(req.body);
             // יצירת טוקן ושמירתו במשתמש
-            let token = jwtt
-            (newUser);
+            let token = jwtt(newUser);
             newUser.token = token;
     
             let data = await newUser.save();
