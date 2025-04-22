@@ -66,7 +66,7 @@ export const addInvitation = async (req, res) => {
     try {
         let { userId, orderRooms, EmailAddress, pay } = req.body;
 
-        if (!userId || !orderRooms || orderRooms.length==0 || !pay) {
+        if (!userId || !orderRooms || orderRooms.length === 0 || !pay) {
             return res.status(400).json({
                 title: "Missing required details",
                 message: "userId, orderRooms, and payment details are required",
@@ -81,7 +81,9 @@ export const addInvitation = async (req, res) => {
             });
         }
 
-        let availableRooms = [];
+        // יצירת מערך החדרים עם הפרטים המלאים + סימון כתפוס
+        let orderDetails = [];
+
         for (let item of orderRooms) {
             const room = await roomModel.findById(item._id);
             if (!room) {
@@ -90,26 +92,26 @@ export const addInvitation = async (req, res) => {
                     message: `Room with ID ${item._id} does not exist`,
                 });
             }
-            availableRooms.push(room);
-        }
 
-        for (let room of availableRooms) {
             room.isOccupied = true;
             await room.save();
+
+            orderDetails.push({
+                _id: room._id,
+                name: room.name,
+                price: room.price,
+                quantity: item.quantity || 1
+            });
         }
 
+        // יצירת ההזמנה בפועל
         const invitation = new invitationModel({
             userId,
-            orderRooms: orderRooms.map((item, i) => ({
-                _id: availableRooms[i]._id,
-                name: availableRooms[i].name,
-                price: availableRooms[i].price,
-                quantity: item.quantity || 1
-            })),
+            orderRooms: orderDetails,
             EmailAddress,
             pay,
         });
-        
+
         await invitation.save();
 
         return res.json(invitation);

@@ -8,7 +8,7 @@ router.get("/", getAllRooms);
 router.get("/totalPages", getTotalRoomPages); // ✅ הוספת הנתיב שחסר
 router.get("/:id", getByID);
 router.delete("/:id", deleteById);
-router.put("/:id", updateByID);
-router.post("/" ,add);
+router.put("/:id",check, updateByID);
+router.post("/" ,check,add);
 
 export default router;
