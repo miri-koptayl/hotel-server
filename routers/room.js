@@ -9,6 +9,6 @@ router.get("/totalPages", getTotalRoomPages); // ✅ הוספת הנתיב שח�
 router.get("/:id", getByID);
 router.delete("/:id",check, deleteById);
 router.put("/:id",check, updateByID);
-router.post("/" ,add);
+router.post("/",check ,add);
 
 export default router;
