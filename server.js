@@ -7,7 +7,7 @@ import roomRouter from "./routers/room.js";
 import userRouter from "./routers/user.js";
 import invitationRouter from "./routers/invitation.js";
 import logToFile from "./middlewares/logTOFilrMiddleware.js";
-import { jwtt } from "./Utils/generateToken.js";
+import { generateToken } from "./Utils/generateToken.js";
 
 dotenv.config();
 connectToDB();

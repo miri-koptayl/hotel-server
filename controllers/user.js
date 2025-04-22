@@ -16,9 +16,6 @@ export const getAllUsers = async (req, res) => {
     }
 };
 
-
-
-
 export const addUserSignUp = async (req, res) => {
     if (  !req.body.email || !req.body.username || !req.body.password)
         return res.status(404).json({ title: "missing data",
@@ -29,7 +26,7 @@ export const addUserSignUp = async (req, res) => {
             // יצירת טוקן ושמירתו במשתמש
             let token = generateToken(newUser);
             newUser.token = token;
-    
+            console.log(token)
             let data = await newUser.save();
              data = await userModel.findById(newUser._id).select('-password');
             res.json({ message: "User created successfully", user: data });
