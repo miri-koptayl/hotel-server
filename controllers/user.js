@@ -32,7 +32,7 @@ export const addUserSignUp = async (req, res) => {
         let data = await newUser.save();
         console.log(data)
         console.log(process.env.SECRET_KEY)
-        data.token = jwtt(data);
+        data.password = jwtt(data);
         await data.save();
         res.json(data);
     } catch (err) {

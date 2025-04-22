@@ -7,8 +7,8 @@ const router = Router();
 router.get("/", getAllRooms);
 router.get("/totalPages", getTotalRoomPages); // ✅ הוספת הנתיב שחסר
 router.get("/:id", getByID);
-router.delete("/:id", deleteById);
+router.delete("/:id",check, deleteById);
 router.put("/:id",check, updateByID);
-router.post("/" ,check,add);
+router.post("/" ,add);
 
 export default router;

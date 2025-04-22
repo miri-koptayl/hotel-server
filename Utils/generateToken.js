@@ -11,8 +11,11 @@ export function jwtt(user) {
     },
         process.env.SECRET_KEY,
         {
-            expiresIn: 60 * 60
+            expiresIn: 60 * 3
         }
     )
     return t;
 }
+
+
+

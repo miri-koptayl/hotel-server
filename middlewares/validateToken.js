@@ -23,7 +23,7 @@ export function checkManager(req, res, next) {
     try {
         let result = jwt.verify(token, process.env.SECRET_KEY);
         req.user = result;
-        if (result.role == "MANAGER")
+        if (result.role == "ADMIN")
             next()
         else
             return res.status(403).json({ title: "ין לך הרשאה..." })
