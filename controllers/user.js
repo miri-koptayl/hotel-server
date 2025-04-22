@@ -1,5 +1,5 @@
 import { userModel } from "../models/user.js";
-import { jwtt } from "../Utils/generateToken.js";
+import { generateToken } from "../Utils/generateToken.js";
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 
@@ -27,7 +27,7 @@ export const addUserSignUp = async (req, res) => {
             
             let newUser = new userModel(req.body);
             // יצירת טוקן ושמירתו במשתמש
-            let token = jwtt(newUser);
+            let token = generateToken(newUser);
             newUser.token = token;
     
             let data = await newUser.save();
@@ -47,7 +47,7 @@ export const getUserByUserNamePasswordLogin = async (req, res) => {
         let data = await userModel.findOne({ username: username, password: password }).select('-password');
         if (!data)
             return res.status(404).json({ title: "cannot login", message: "no user with such details" })
-         data.token=jwtt(data)  ;  
+         data.token=generateToken(data)  ;  
         res.json(data)
     } catch (err) {
         console.log("err");
